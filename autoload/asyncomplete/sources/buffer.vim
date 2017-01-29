@@ -1,3 +1,4 @@
+let s:words = {}
 function! asyncomplete#sources#buffer#completor(opt, ctx)
     if empty(s:words)
         return
@@ -48,7 +49,9 @@ endfunction
 function! s:refresh_keywords() abort
     let l:text = join(getline(1, '$'), "\n")
     for l:word in split(l:text, '\W\+')
-        let s:words[l:word] = 1
+        if len(l:word) > 1
+            let s:words[l:word] = 1
+        endif
     endfor
 endfunction
 
