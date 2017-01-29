@@ -1,4 +1,3 @@
-let s:words = {}
 function! asyncomplete#sources#buffer#completor(opt, ctx)
     if empty(s:words)
         return
@@ -15,7 +14,12 @@ function! asyncomplete#sources#buffer#completor(opt, ctx)
         return
     endif
 
-    let l:matches = map(keys(s:words),'{"word":v:val,"dup":1,"icase":1,"menu": "[buffer]"}')
+    let l:words = keys(s:words)
+    if !empty(s:last_word) && l:kw !=? s:last_word && !has_key(s:words, s:last_word)
+        let l:words += [s:last_word]
+    endif
+
+    let l:matches = map(l:words,'{"word":v:val,"dup":1,"icase":1,"menu": "[buffer]"}')
     let l:startcol = l:col - l:kwlen
 
     call asyncomplete#complete(a:opt['name'], a:ctx, l:startcol, l:matches)
@@ -49,9 +53,14 @@ function! s:refresh_keywords() abort
 endfunction
 
 function! s:refresh_keyword_incr(typed) abort
-    let l:words = split(a:typed), '\W+'
-    echom json_encode(l:words)
-    for l:word in l:words
-        let s:words[l:word] = 1
-    endfor
+    let l:words = split(a:typed, '\W\+')
+    if len(l:words) > 1
+        for l:word in l:words[:len(l:words)-2]
+            let s:words[l:word] = 1
+        endfor
+    endif
+    if len(l:words) > 0
+        let l:new_last_word = l:words[len(l:words)-1:][0]
+        let s:last_word = l:new_last_word
+    endif
 endfunction
