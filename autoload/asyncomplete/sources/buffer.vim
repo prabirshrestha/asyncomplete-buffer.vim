@@ -1,4 +1,5 @@
 let s:words = {}
+let s:last_word = ''
 function! asyncomplete#sources#buffer#completor(opt, ctx)
     if empty(s:words)
         return
