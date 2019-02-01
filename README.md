@@ -21,6 +21,13 @@ call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options
     \ }))
 ```
 
+### Options
+
+Clear buffer word cache on events (default: `1`)
+```vim
+let g:asyncomplete_buffer_clear_cache = 1
+```
+
 ### Credits
 All the credit goes to the following projects
 * [https://github.com/roxma/nvim-complete-manager](https://github.com/roxma/nvim-complete-manager)
