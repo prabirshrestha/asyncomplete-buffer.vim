@@ -1,5 +1,7 @@
 let s:words = {}
 let s:last_word = ''
+let g:asyncomplete_buffer_split_char = get(g:, 'asyncomplete_buffer_split_char', '\W')
+
 function! asyncomplete#sources#buffer#completor(opt, ctx)
     if empty(s:words)
         return
@@ -49,7 +51,7 @@ endfunction
 
 function! s:refresh_keywords() abort
     let l:text = join(getline(1, '$'), "\n")
-    for l:word in split(l:text, '\W\+')
+    for l:word in split(l:text, g:asyncomplete_buffer_split_char . '\+')
         if len(l:word) > 1
             let s:words[l:word] = 1
         endif
@@ -57,7 +59,7 @@ function! s:refresh_keywords() abort
 endfunction
 
 function! s:refresh_keyword_incr(typed) abort
-    let l:words = split(a:typed, '\W\+')
+    let l:words = split(a:typed, g:asyncomplete_buffer_split_char . '\+')
     if len(l:words) > 1
         for l:word in l:words[:len(l:words)-2]
             let s:words[l:word] = 1
