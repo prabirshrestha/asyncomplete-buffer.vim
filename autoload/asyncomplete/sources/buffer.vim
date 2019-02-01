@@ -28,10 +28,10 @@ function! asyncomplete#sources#buffer#completor(opt, ctx)
 endfunction
 
 function! asyncomplete#sources#buffer#get_source_options(opts)
-    return extend(extend({}, a:opts), {
+    return extend({
                 \ 'events': ['CursorHold','CursorHoldI','BufWinEnter','BufWritePost','TextChangedI'],
                 \ 'on_event': function('s:on_event'),
-                \ })
+                \}, a:opts)
 endfunction
 
 let s:last_ctx = {}
