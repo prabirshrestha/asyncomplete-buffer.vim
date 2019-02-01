@@ -48,6 +48,7 @@ function! s:on_event(opt, ctx, event) abort
 endfunction
 
 function! s:refresh_keywords() abort
+    let s:words = {}
     let l:text = join(getline(1, '$'), "\n")
     for l:word in split(l:text, '\W\+')
         if len(l:word) > 1
