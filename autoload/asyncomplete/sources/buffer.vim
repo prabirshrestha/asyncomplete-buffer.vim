@@ -1,5 +1,7 @@
 let s:words = {}
 let s:last_word = ''
+let g:asyncomplete_buffer_clear_cache = get(g:, 'asyncomplete_buffer_clear_cache', 1)
+
 function! asyncomplete#sources#buffer#completor(opt, ctx)
     if empty(s:words)
         return
@@ -48,6 +50,9 @@ function! s:on_event(opt, ctx, event) abort
 endfunction
 
 function! s:refresh_keywords() abort
+    if g:asyncomplete_buffer_clear_cache
+        let s:words = {}
+    endif
     let l:text = join(getline(1, '$'), "\n")
     for l:word in split(l:text, '\W\+')
         if len(l:word) > 1
