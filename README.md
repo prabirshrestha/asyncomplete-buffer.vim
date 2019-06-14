@@ -18,8 +18,12 @@ call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options
     \ 'whitelist': ['*'],
     \ 'blacklist': ['go'],
     \ 'completor': function('asyncomplete#sources#buffer#completor'),
+    \ 'config': {
+    \    'max_buffer_size': 5000000,
+    \  },
     \ }))
 ```
+Note: config is optional. `max_buffer_size` defaults to 5000000 (5mb). If the buffer size exceeds `max_buffer_size` it is ignored. Set `max_buffer_size` to -1 for unlimited buffer size.
 
 ### Options
 
