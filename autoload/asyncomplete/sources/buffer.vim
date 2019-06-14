@@ -38,6 +38,18 @@ endfunction
 
 let s:last_ctx = {}
 function! s:on_event(opt, ctx, event) abort
+    let l:max_buffer_size = 5000000 " 5mb
+    if has_key(a:opt, 'config') && has_key(a:opt['config'], 'max_buffer_size')
+        let l:max_buffer_size = a:opt['config']['max_buffer_size']
+    endif
+    if l:max_buffer_size != -1
+        let l:buffer_size = line2byte(line('$') + 1)
+        if l:buffer_size > l:max_buffer_size
+            call asyncomplete#log('ignoring buffer due to large size', expand('%:p'), l:buffer_size)
+            return
+        endif
+    endif
+
     if a:event == 'TextChangedI'
         call s:refresh_keyword_incr(a:ctx['typed'])
     else
