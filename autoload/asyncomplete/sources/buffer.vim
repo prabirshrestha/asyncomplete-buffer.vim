@@ -53,7 +53,9 @@ function! s:refresh_keywords() abort
     if g:asyncomplete_buffer_clear_cache
         let s:words = {}
     endif
-    let l:text = join(getline(1, '$'), "\n")
+    let l:minline = max([1, line('w0') - 500])
+    let l:maxline = min([line('$'), line('w$') + 500])
+    let l:text = join(getline(l:minline, l:maxline), "\n")
     for l:word in split(l:text, '\W\+')
         if len(l:word) > 1
             let s:words[l:word] = 1
