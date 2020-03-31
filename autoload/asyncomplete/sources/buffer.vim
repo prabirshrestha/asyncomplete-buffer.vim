@@ -15,7 +15,7 @@ function! asyncomplete#sources#buffer#completor(opt, ctx)
 
     let l:col = a:ctx['col']
 
-    let l:kw = matchstr(l:typed, '\w\+$')
+    let l:kw = matchstr(l:typed, '\k@!\+')
     let l:kwlen = len(l:kw)
 
     let l:matches = map(keys(s:words),'{"word":v:val,"dup":1,"icase":1,"menu": "[buffer]"}')
@@ -58,7 +58,7 @@ function! s:refresh_keywords() abort
         let s:words = {}
     endif
     let l:text = join(getline(1, '$'), "\n")
-    for l:word in split(l:text, '\k\+')
+    for l:word in split(l:text, '\k@!\+')
         if len(l:word) > 1
             let s:words[l:word] = 1
         endif
