@@ -1,7 +1,7 @@
 let s:words = {}
 let s:last_word = ''
 let g:asyncomplete_buffer_clear_cache = get(g:, 'asyncomplete_buffer_clear_cache', 1)
-let g:asyncomplete_buffer_identify_non_words_regex = get(g:, 'asyncomplete_buffer_identify_non_workds_regex', '\W\+')
+let g:asyncomplete_buffer_identify_non_words_regex = get(g:, 'asyncomplete_buffer_identify_non_words_regex', '\W\+')
 let g:asyncomplete_buffer_identify_words_regex     = get(g:, 'asyncomplete_buffer_identify_words_regex', '\w\+$')
 
 function! asyncomplete#sources#buffer#completor(opt, ctx)
@@ -60,7 +60,7 @@ function! s:refresh_keywords() abort
         let s:words = {}
     endif
     let l:text = join(getline(1, '$'), "\n")
-    for l:word in split(l:text, g:asyncomplete_buffer_split_regex)
+    for l:word in split(l:text, g:asyncomplete_buffer_identify_non_words_regex)
         if len(l:word) > 1
             let s:words[l:word] = 1
         endif
@@ -69,7 +69,7 @@ function! s:refresh_keywords() abort
 endfunction
 
 function! s:refresh_keyword_incremental(typed) abort
-    let l:words = split(a:typed, g:asyncomplete_buffer_split_regex)
+    let l:words = split(a:typed,g:asyncomplete_buffer_identify_non_words_regex)
     for l:word in l:words
         if len(l:word) > 1
             let s:words[l:word] = 1
