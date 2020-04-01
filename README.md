@@ -32,6 +32,13 @@ Clear buffer word cache on events (default: `1`)
 let g:asyncomplete_buffer_clear_cache = 1
 ```
 
+Custom regex to dedide how to identify non word characters (defaults: '\W\+')
+```vim
+let g:asyncomplete_buffer_split_regex = get(g:, 'asyncomplete_buffer_split_regex', '\W\+')
+```
+
+
+
 ### Credits
 All the credit goes to the following projects
 * [https://github.com/roxma/nvim-complete-manager](https://github.com/roxma/nvim-complete-manager)
