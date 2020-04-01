@@ -67,7 +67,7 @@ function! s:refresh_keywords() abort
 endfunction
 
 function! s:refresh_keyword_incremental(typed) abort
-    let l:words = split(a:typed, '\k\+')
+    let l:words = split(a:typed, '\k\@!')
 
     for l:word in l:words
         if len(l:word) > 1
