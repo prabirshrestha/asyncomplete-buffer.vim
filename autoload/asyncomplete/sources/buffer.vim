@@ -60,7 +60,7 @@ function! s:refresh_keywords() abort
         let s:words = {}
     endif
     let l:text = join(getline(1, '$'), "\n")
-    for l:word in map(split(l:text, g:asyncomplete_buffer_identify_words_regex.'\zs'),matchstr(v:val,g:asyncomplete_buffer_identify_words_regex))
+    for l:word in map(split(l:text, g:asyncomplete_buffer_identify_words_regex.'\zs'),'matchstr(v:val,g:asyncomplete_buffer_identify_words_regex)')
         if len(l:word) > 1
             let s:words[l:word] = 1
         endif
@@ -69,7 +69,7 @@ function! s:refresh_keywords() abort
 endfunction
 
 function! s:refresh_keyword_incremental(typed) abort
-    let l:words = map(split(a:typed, g:asyncomplete_buffer_identify_words_regex.'\zs'),matchstr(v:val,g:asyncomplete_buffer_identify_words_regex))
+    let l:words = map(split(a:typed, g:asyncomplete_buffer_identify_words_regex.'\zs'),'matchstr(v:val,g:asyncomplete_buffer_identify_words_regex)')
     for l:word in l:words
         if len(l:word) > 1
             let s:words[l:word] = 1
