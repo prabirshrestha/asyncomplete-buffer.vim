@@ -4,6 +4,7 @@ let g:asyncomplete_buffer_clear_cache = get(g:, 'asyncomplete_buffer_clear_cache
 let g:asyncomplete_buffer_identify_words_regex = get(g:, 'asyncomplete_buffer_identify_words_regex', '\w\+')
 
 function! asyncomplete#sources#buffer#completor(opt, ctx)
+    call asyncomplete#log('asyncomplete#buffer ctx', a:ctx)
     let l:typed = a:ctx['typed']
 
     call s:refresh_keyword_incremental(l:typed)
