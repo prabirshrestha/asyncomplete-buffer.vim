@@ -1,8 +1,7 @@
 let s:words = {}
 let s:last_word = ''
 let g:asyncomplete_buffer_clear_cache = get(g:, 'asyncomplete_buffer_clear_cache', 1)
-let g:asyncomplete_buffer_identify_non_words_regex = get(g:, 'asyncomplete_buffer_identify_non_words_regex', '\W\+')
-let g:asyncomplete_buffer_identify_words_regex     = get(g:, 'asyncomplete_buffer_identify_words_regex', '\w\+')
+let g:asyncomplete_buffer_identify_words_regex = get(g:, 'asyncomplete_buffer_identify_words_regex', '\w\+')
 
 function! asyncomplete#sources#buffer#completor(opt, ctx)
     let l:typed = a:ctx['typed']
@@ -69,7 +68,9 @@ function! s:refresh_keywords() abort
 endfunction
 
 function! s:refresh_keyword_incremental(typed) abort
+    call asyncomplete#log('asyncomplete#sources#buffer', 'typed words ', a:typed)
     let l:words = map(split(a:typed, g:asyncomplete_buffer_identify_words_regex.'\zs'),'matchstr(v:val,g:asyncomplete_buffer_identify_words_regex)')
+    call asyncomplete#log('asyncomplete#sources#buffer', 'refreshing words with ', l:words)
     for l:word in l:words
         if len(l:word) > 1
             let s:words[l:word] = 1
