@@ -22,7 +22,7 @@ function! asyncomplete#sources#buffer#completor(opt, ctx)
     let l:matches = map(keys(s:words),'{"word":v:val,"dup":1,"icase":1,"menu": "[buffer]"}')
     let l:startcol = l:col - l:kwlen
 
-    call asyncomplete#complete(a:opt['name'], a:ctx, l:startcol, l:matches)
+    call asyncomplete#complete(a:opt['name'], a:ctx, l:startcol, l:matches, 1)
 endfunction
 
 function! asyncomplete#sources#buffer#get_source_options(opts)
