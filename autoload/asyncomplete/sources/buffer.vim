@@ -72,8 +72,8 @@ function! s:refresh_keyword_incremental(typed) abort
     let l:words = map(split(a:typed, g:asyncomplete_buffer_identify_words_regex.'\zs'),'matchstr(v:val,g:asyncomplete_buffer_identify_words_regex)')
     call asyncomplete#log('asyncomplete#sources#buffer', 'refreshing words with ', l:words)
     for l:word in l:words
-        if len(l:word) > 1
+        " if len(l:word) > 1
             let s:words[l:word] = 1
-        endif
+        " endif
     endfor
 endfunction
