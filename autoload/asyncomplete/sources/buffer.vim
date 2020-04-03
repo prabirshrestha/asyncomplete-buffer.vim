@@ -34,7 +34,7 @@ endfunction
 
 function! asyncomplete#sources#buffer#get_source_options(opts)
     return extend({
-                \ 'events': ['CursorHold','CursorHoldI','BufWinEnter','BufWritePost','TextChangedI'],
+        \ 'events': ['CursorHold','CursorHoldI','BufWinEnter','BufWritePost','TextChangedI'],
         \ 'on_event': function('s:on_event'),
         \}, a:opts)
 endfunction
@@ -53,7 +53,7 @@ function! s:on_event(opt, ctx, event) abort
         endif
     endif
 
-    if a:event == 'TextChangedI'
+    if a:event ==# 'TextChangedI'
         call s:refresh_keyword_incr(a:ctx['typed'])
     else
         if s:last_ctx == a:ctx
