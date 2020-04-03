@@ -5,9 +5,6 @@ let g:asyncomplete_buffer_identify_words_regex = get(g:, 'asyncomplete_buffer_id
 
 function! asyncomplete#sources#buffer#completor(opt, ctx)
     call asyncomplete#log('asyncomplete#buffer ctx', a:ctx)
-    let l:typed = a:ctx['typed']
-
-    call s:refresh_keyword_incremental(l:typed)
 
     if empty(s:words)
         return
@@ -23,12 +20,12 @@ function! asyncomplete#sources#buffer#completor(opt, ctx)
     let l:matches = map(keys(s:words),'{"word":v:val,"dup":1,"icase":1,"menu": "[buffer]"}')
     let l:startcol = l:col - l:kwlen
 
-    call asyncomplete#complete(a:opt['name'], a:ctx, l:startcol, l:matches, 1)
+    call asyncomplete#complete(a:opt['name'], a:ctx, l:startcol, l:matches)
 endfunction
 
 function! asyncomplete#sources#buffer#get_source_options(opts)
     return extend({
-        \ 'events': ['VimEnter', 'BufWinEnter'],
+        \ 'events': ['TextChangedI', 'VimEnter', 'BufWinEnter'],
         \ 'on_event': function('s:on_event'),
         \}, a:opts)
 endfunction
@@ -50,8 +47,13 @@ function! s:should_ignore(opt) abort
 endfunction
 
 function! s:on_event(opt, ctx, event) abort
-    if s:should_ignore(a:opt) | return | endif
-    call s:refresh_keywords()
+    if (a:event ==# 'TextChangedI')
+        let l:typed = a:ctx['typed']
+        call s:refresh_keyword_incremental(l:typed)
+    else
+        if s:should_ignore(a:opt) | return | endif
+        call s:refresh_keywords()
+    endif
 endfunction
 
 function! s:refresh_keywords() abort
