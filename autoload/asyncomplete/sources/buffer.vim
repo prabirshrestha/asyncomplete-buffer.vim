@@ -14,7 +14,7 @@ function! asyncomplete#sources#buffer#completor(opt, ctx)
     let l:col = a:ctx['col']
     let l:typed = a:ctx['typed']
 
-    let l:kw = matchstr(l:typed, '\w\+$')
+    let l:kw = matchstr(l:typed, g:asyncomplete_buffer_identify_words_regex .'$')
     let l:kwlen = len(l:kw)
 
     if l:kwlen < 1
@@ -69,7 +69,7 @@ function! s:refresh_keywords() abort
         let s:words = {}
     endif
     let l:text = join(getline(1, '$'), "\n")
-    for l:word in map(split(l:text, g:asyncomplete_buffer_identify_words_regex.'\zs'),'matchstr(v:val,g:asyncomplete_buffer_identify_words_regex)')
+    for l:word in s:split_words(l:text)
         if len(l:word) > 1
             let s:words[l:word] = 1
         endif
@@ -77,7 +77,7 @@ function! s:refresh_keywords() abort
 endfunction
 
 function! s:refresh_keyword_incr(typed) abort
-    let l:words = split(a:typed, '\W\+')
+    let l:words = s:split_words(a:typed)
     if len(l:words) > 1
         for l:word in l:words[:len(l:words)-2]
                 let s:words[l:word] = 1
@@ -87,4 +87,8 @@ function! s:refresh_keyword_incr(typed) abort
         let l:new_last_word = l:words[len(l:words)-1:][0]
         let s:last_word = l:new_last_word
     endif
+endfunction
+
+function! s:split_words(text)
+    return  map(split(a:text, g:asyncomplete_buffer_identify_words_regex.'\zs'),'matchstr(v:val,g:asyncomplete_buffer_identify_words_regex)')
 endfunction
