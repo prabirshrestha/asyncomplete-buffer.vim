@@ -49,7 +49,6 @@ function! s:should_ignore(opt) abort
     return 0
 endfunction
 
-let s:last_ctx = {}
 function! s:on_event(opt, ctx, event) abort
     if s:should_ignore(a:opt) | return | endif
     call s:refresh_keywords()
@@ -68,13 +67,19 @@ function! s:refresh_keywords() abort
     call asyncomplete#log('asyncomplete#buffer', 's:refresh_keywords() complete')
 endfunction
 
+
+let s:last_typed = ''
 function! s:refresh_keyword_incremental(typed) abort
     call asyncomplete#log('asyncomplete#sources#buffer', 'typed words ', a:typed)
-    let l:words = map(split(a:typed, g:asyncomplete_buffer_identify_words_regex.'\zs'),'matchstr(v:val,g:asyncomplete_buffer_identify_words_regex)')
-    call asyncomplete#log('asyncomplete#sources#buffer', 'refreshing words with ', l:words)
-    for l:word in l:words
-        " if len(l:word) > 1
-            let s:words[l:word] = 1
-        " endif
-    endfor
+    if (len(a:typed) == 1)
+        let l:words = map(split(s:last_typed, g:asyncomplete_buffer_identify_words_regex.'\zs'),'matchstr(v:val,g:asyncomplete_buffer_identify_words_regex)')
+        call asyncomplete#log('asyncomplete#sources#buffer', 'refreshing words with ', l:words)
+        for l:word in l:words
+            if len(l:word) > 1
+                let s:words[l:word] = 1
+            endif
+        endfor
+    else
+        let s:last_typed = a:typed
+    endif
 endfunction
