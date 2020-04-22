@@ -32,7 +32,7 @@ Clear buffer word cache on events (default: `1`)
 let g:asyncomplete_buffer_clear_cache = 1
 ```
 
-Custom regex to dedide how to identify word characters (defaults: '\w\+')
+Custom regex to dedide how to identify word characters (defaults: `\w\+`)
 ```vim
 let g:asyncomplete_buffer_identify_words_regex     = '\w\+'
 let g:asyncomplete_buffer_identify_words_regex     = '\k\+' (uses iskeyword)
