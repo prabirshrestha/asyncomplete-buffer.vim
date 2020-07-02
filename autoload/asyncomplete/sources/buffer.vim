@@ -2,6 +2,8 @@ let s:words = {}
 let s:last_word = ''
 let g:asyncomplete_buffer_clear_cache = get(g:, 'asyncomplete_buffer_clear_cache', 1)
 
+let g:asyncomplete_buffer_word_rx_class = get(g:, 'asyncomplete_buffer_word_rx_class', '[:alnum:]')
+
 function! asyncomplete#sources#buffer#completor(opt, ctx)
     let l:typed = a:ctx['typed']
 
@@ -15,7 +17,7 @@ function! asyncomplete#sources#buffer#completor(opt, ctx)
 
     let l:col = a:ctx['col']
 
-    let l:kw = matchstr(l:typed, '\w\+$')
+    let l:kw = matchstr(l:typed, '[' . g:asyncomplete_buffer_word_rx_class . ']\+$')
     let l:kwlen = len(l:kw)
 
     let l:matches = map(keys(s:words),'{"word":v:val,"dup":1,"icase":1,"menu": "[buffer]"}')
@@ -61,7 +63,7 @@ function! s:refresh_keywords() abort
         let s:words = {}
     endif
     let l:text = join(getline(1, '$'), "\n")
-    for l:word in split(l:text, '\W\+')
+    for l:word in split(l:text, '[^' . g:asyncomplete_buffer_word_rx_class . ']\+')
         if len(l:word) > 1
             let s:words[l:word] = 1
         endif
@@ -70,7 +72,7 @@ function! s:refresh_keywords() abort
 endfunction
 
 function! s:refresh_keyword_incremental(typed) abort
-    let l:words = split(a:typed, '\W\+')
+    let l:words = split(a:typed, '[^' . g:asyncomplete_buffer_word_rx_class . ']\+')
 
     for l:word in l:words
         if len(l:word) > 1
