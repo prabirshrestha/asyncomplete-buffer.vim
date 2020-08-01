@@ -15,7 +15,7 @@ function! asyncomplete#sources#buffer#completor(opt, ctx)
 
     let l:col = a:ctx['col']
 
-    let l:kw = matchstr(l:typed, '\w\+$')
+    let l:kw = matchstr(l:typed, '\k\+$')
     let l:kwlen = len(l:kw)
 
     let l:matches = map(keys(s:words),'{"word":v:val,"dup":1,"icase":1,"menu": "[buffer]"}')
