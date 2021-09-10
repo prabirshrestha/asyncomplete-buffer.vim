@@ -1,12 +1,13 @@
 let s:words = {}
+let s:max_buffer_size = 5000000 " 5mb
 let g:asyncomplete_buffer_clear_cache = get(g:, 'asyncomplete_buffer_clear_cache', 1)
 
 function! asyncomplete#sources#buffer#completor(opt, ctx)
-    let l:typed = a:ctx['typed']
-
     if empty(s:words)
         return
     endif
+
+    let l:typed = a:ctx['typed']
 
     let l:matches = []
 
@@ -31,14 +32,10 @@ function! asyncomplete#sources#buffer#get_source_options(opts)
         \}, a:opts)
 endfunction
 
-function! s:should_ignore(opt) abort
-    let l:max_buffer_size = 5000000 " 5mb
-    if has_key(a:opt, 'config') && has_key(a:opt['config'], 'max_buffer_size')
-        let l:max_buffer_size = a:opt['config']['max_buffer_size']
-    endif
-    if l:max_buffer_size != -1
+function! s:should_ignore() abort
+    if s:max_buffer_size != -1
         let l:buffer_size = line2byte(line('$') + 1)
-        if l:buffer_size > l:max_buffer_size
+        if l:buffer_size > s:max_buffer_size
             call asyncomplete#log('asyncomplete#sources#buffer', 'ignoring buffer autocomplete due to large size', expand('%:p'), l:buffer_size)
             return 1
         endif
@@ -48,9 +45,8 @@ function! s:should_ignore(opt) abort
 endfunction
 
 function! s:on_event(opt, ctx, event) abort
-    if s:should_ignore(a:opt) | return | endif
-
     if a:event ==# 'BufWinEnter'
+        call s:init_option(a:opt)
         call s:refresh_keywords()
     elseif a:event ==# 'TextChangedI'
         let l:typed = a:ctx['typed']
@@ -64,7 +60,15 @@ function! s:on_event(opt, ctx, event) abort
     endif
 endfunction
 
+function! s:init_option(opt) abort
+    if has_key(a:opt, 'config') && has_key(a:opt['config'], 'max_buffer_size')
+        let s:max_buffer_size = a:opt['config']['max_buffer_size']
+    endif
+endfunction
+
 function! s:refresh_keywords() abort
+    if s:should_ignore() | return | endif
+
     if g:asyncomplete_buffer_clear_cache
         let s:words = {}
     endif
