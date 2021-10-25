@@ -27,7 +27,7 @@ endfunction
 
 function! asyncomplete#sources#buffer#get_source_options(opts)
     return extend({
-        \ 'events': ['BufWinEnter', 'TextChangedI', 'InsertLeave'],
+        \ 'events': ['BufEnter', 'TextChangedI', 'InsertLeave'],
         \ 'on_event': function('s:on_event'),
         \}, a:opts)
 endfunction
@@ -45,7 +45,7 @@ function! s:should_ignore() abort
 endfunction
 
 function! s:on_event(opt, ctx, event) abort
-    if a:event ==# 'BufWinEnter'
+    if a:event ==# 'BufEnter'
         call s:init_option(a:opt)
         call s:refresh_keywords()
     elseif a:event ==# 'TextChangedI'
