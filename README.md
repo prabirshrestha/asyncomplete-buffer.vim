@@ -13,7 +13,7 @@ Plug 'prabirshrestha/asyncomplete-buffer.vim'
 #### Registration
 
 ```vim
-call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
     \ 'name': 'buffer',
     \ 'allowlist': ['*'],
     \ 'blocklist': ['go'],
